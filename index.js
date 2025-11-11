@@ -54,7 +54,7 @@ async function run() {
       res.send(result);
       console.log(id);
     });
-    // Get data by email
+    // Get data by email indivisually
 
     app.get("/habitByEmail/", async (req, res) => {
       const email = req.query.email;
