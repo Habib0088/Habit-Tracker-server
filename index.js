@@ -45,6 +45,12 @@ async function run() {
         .toArray();
       res.send(result);
     });
+
+    // Get data for Browse all
+    app.get('/browseAll',async(req,res)=>{
+      const result=await habitCollection.find().toArray()
+      res.send(result)
+    })
     // Get data by ID
 
     app.get("/habit/:id", async (req, res) => {
