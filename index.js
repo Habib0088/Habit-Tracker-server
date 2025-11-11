@@ -41,6 +41,7 @@ async function run() {
       const result = await habitCollection
         .find()
         .sort({ Created_at: -1 })
+        .limit(6)
         .toArray();
       res.send(result);
     });
@@ -55,14 +56,39 @@ async function run() {
     });
     // Get data by email
 
-    app.get("/habitByEmail/", async(req, res) => {
+    app.get("/habitByEmail/", async (req, res) => {
       const email = req.query.email;
-      const filter = ({Email: email});
-      const result=await habitCollection.find(filter).toArray()
-      res.send(result)
+      const filter = {
+        Created_by: email,
+      };
+      const result = await habitCollection.find(filter).toArray();
+      res.send(result);
 
       console.log(email);
     });
+
+    //
+    app.put("/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updatedData = {
+        $set: data,
+      };
+      const result = await habitCollection.updateOne(filter, updatedData);
+      res.send(result);
+    });
+    // DELETE
+
+    app.delete("/delete/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+
+      const filter = { _id: new ObjectId(id) };
+      const result = await habitCollection.deleteOne(filter);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
