@@ -1,11 +1,12 @@
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config()
 const app = express();
 const port = 3000;
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri =
-  "mongodb+srv://Habit-tracker:ufOk6srAY6jKcfnb@cluster0.4xbagdk.mongodb.net/?appName=Cluster0";
+  `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.4xbagdk.mongodb.net/?appName=Cluster0`;
 
 app.use(cors());
 app.use(express.json());
@@ -21,13 +22,22 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     const db = client.db("Habit");
     const habitCollection = db.collection("dailyHabit");
 
     app.get("/", (req, res) => {
       res.send("from server");
     });
+
+    // Serach
+    app.get('/search',async(req,res)=>{
+      const searchData=req.query.search;
+      const filter=({category:searchData})
+      const result=await habitCollection.find(filter).toArray()
+      res.send(result)
+
+    })
     // Post habit data
 
     app.post("/habit", async (req, res) => {
@@ -96,7 +106,7 @@ async function run() {
     });
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
