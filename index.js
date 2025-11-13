@@ -1,7 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const admin = require("firebase-admin");
-
 const app = express();
 const port = 3000;
 
@@ -110,3 +108,5 @@ run().catch(console.dir);
 app.listen(port, () => {
   console.log(`The server running on ${port}`);
 });
+
+// Username:
